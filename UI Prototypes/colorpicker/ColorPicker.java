@@ -11,6 +11,10 @@ import java.util.Hashtable;
 
 public class ColorPicker extends JWindow {
 
+    private final int defaultNumberOfRed = 125;
+    private final int defaultNumberOfGreen = 125;
+    private final int defaultNumberOfBlue = 125;
+
     private final JPanel canvas = new JPanel();
     private final JSlider redColorSlider, greenColorSlider, blueColorSlider;
     private Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
@@ -18,7 +22,10 @@ public class ColorPicker extends JWindow {
 
     public ColorPicker(){
         super();
+        add(createPanelForCanvas());
+
         JPanel controlColorsPanel = createControlColorsPanel();
+        add(controlColorsPanel);
 
         redColorSlider = createSlider();
         greenColorSlider = createSlider();
@@ -32,19 +39,15 @@ public class ColorPicker extends JWindow {
         controlColorsPanel.add(panelForGreenColor);
         controlColorsPanel.add(panelForBlueColor);
 
-        add(createPanelForCanvas());
-
         pack();
     }
 
     private JPanel createPanelForCanvas(){
         JPanel panelForCanvas = new JPanel(new BorderLayout());
-        //panelForCanvas.setBackground(Color.RED);
 
         Border canvasBorder = BorderFactory.createEmptyBorder(10, 10, 10,0);
         panelForCanvas.setBorder(canvasBorder);
 
-        //canvas.setBackground(Color.BLUE);
         hexNumberOfColor = getHexOfDefaultColor();
         canvas.setToolTipText("#" + hexNumberOfColor);
         canvas.setBackground(getDefaultColor());
@@ -59,7 +62,7 @@ public class ColorPicker extends JWindow {
     }
 
     private Color getDefaultColor(){
-        return new Color(redColorSlider.getValue(), greenColorSlider.getValue(), blueColorSlider.getValue());
+        return new Color(defaultNumberOfRed, defaultNumberOfGreen, defaultNumberOfBlue);
     }
 
     private JPanel createControlColorsPanel(){
@@ -70,16 +73,14 @@ public class ColorPicker extends JWindow {
         Border controlBorder = BorderFactory.createEmptyBorder(20, 10, 10,10);
         controlColorsPanel.setBorder(controlBorder);
 
-        //controlColorsPanel.setBackground(Color.GREEN);
         controlColorsPanel.setPreferredSize(new Dimension(300, 300));
-        add(controlColorsPanel, BorderLayout.LINE_END);
 
         return controlColorsPanel;
     }
 
     private JPanel createColorControlPanel(String color, JSlider slider){
-        JPanel colorControlPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-        colorControlPanel.add(new JLabel(color + ":"));
+        JPanel colorControlPanel = new JPanel(new BorderLayout());
+        colorControlPanel.add(new JLabel(color + ":"), BorderLayout.LINE_START);
         colorControlPanel.add(slider);
 
         return colorControlPanel;

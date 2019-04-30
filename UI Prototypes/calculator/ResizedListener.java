@@ -16,7 +16,7 @@ public class ResizedListener implements ComponentListener {
 
     @Override
     public void componentResized(ComponentEvent e) {
-        int width = e.getComponent().getWidth();
+        /*int width = e.getComponent().getWidth();
         int height = e.getComponent().getHeight();
         int newWidth = width;
         int newHeight = height;
@@ -31,21 +31,18 @@ public class ResizedListener implements ComponentListener {
         if (newHeight != height || newWidth != width) {
             window.setSize(newWidth, newHeight);
             //window.pack();
-        }
+        }*/
     }
 
     @Override
     public void componentMoved(ComponentEvent e) {
-
     }
 
     @Override
     public void componentShown(ComponentEvent e) {
-
     }
 
     @Override
     public void componentHidden(ComponentEvent e) {
-
     }
 }
