@@ -7,7 +7,8 @@ public class JWindowForCalculator extends JFrame {
 
     public JWindowForCalculator(){
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-        setMinimumSize(new Dimension(300, 500));
+        setMinimumSize(new Dimension(405, 575));
+        getRootPane().setBorder(BorderFactory.createEmptyBorder(15, 15, 15,15));
 
         setTitle("Calculator");
         setLocationRelativeTo(null);
