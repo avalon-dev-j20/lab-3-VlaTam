@@ -15,6 +15,7 @@ public class AbstractFrame extends JFrame {
     AbstractFrame(){
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setMinimumSize(new Dimension(minWidth, minHeight));
+        setMaximumSize(new Dimension(maxWidth, maxHeight)); //Не работает для Windows
         getRootPane().setBorder(BorderFactory.createEmptyBorder(15, 15, 15,15));
 
         setTitle("Calculator");
@@ -23,7 +24,6 @@ public class AbstractFrame extends JFrame {
         setVisible(true);
 
         addComponentListener(new EventHandler());
-        //setExtendedState(JFrame.NORMAL);
     }
 
     private class EventHandler extends ComponentAdapter{
@@ -33,22 +33,13 @@ public class AbstractFrame extends JFrame {
             int width = e.getComponent().getWidth();
             int height = e.getComponent().getHeight();
 
-            if (width > maxWidth || height > maxHeight){
-                setSize(maxWidth, maxHeight);
-                //pack();
-                revalidate();
-            }
-            /*int newWidth = width;
-            int newHeight = height;
-
             if (width > maxWidth)
-                newWidth = maxWidth;
+                width = maxWidth;
 
             if (height > maxHeight)
-                newHeight = maxHeight;
+                height = maxHeight;
 
-            if (newHeight != height || newWidth != width)
-                setSize(newWidth, newHeight);*/
+            setSize(width, height);
         }
     }
 

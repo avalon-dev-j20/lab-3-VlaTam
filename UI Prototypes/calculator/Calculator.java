@@ -1,7 +1,6 @@
 package calculator;
 
-import calculator.listeners.*;
-
+import calculator.builders.ButtonBuilder;
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
@@ -10,32 +9,38 @@ import java.util.List;
 public class Calculator extends AbstractFrame {
 
     public static JLabel resultLabel = new JLabel("0");
+    public static boolean operationIsComplete;  //Используется в слушателях, чтобы после получения промежуточного
+                                                //результата новые вводимые цифры формировали новое число.
+                                                //Промежуточный результат стирается
+
     private final List<JButton> buttons = new ArrayList<>(17);
 
     public Calculator(){
         super();
         addButtons();
         createInterface();
-        addListeners();
-        setMnemonic();
 
         pack();
     }
 
     private void addButtons(){
-        for (int i = 0; i < 10; i++)
-            buttons.add(new JButton("" + i));
-        buttons.add(new JButton("" + "+"));     //10
-        buttons.add(new JButton("" + "-"));     //11
-        buttons.add(new JButton("" + "*"));     //12
-        buttons.add(new JButton("" + "/"));     //13
-        buttons.add(new JButton("" + "CE"));    //14
-        buttons.add(new JButton("" + "."));     //15
-        buttons.add(new JButton("" + "="));     //16
+        ButtonBuilder buttonBuilder = new ButtonBuilder();
+
+        for (int i = 0; i < 10; i++){
+            JButton button = buttonBuilder.createNewButton((char)('0' + i));
+            buttons.add(button);
+        }
+        buttons.add(buttonBuilder.createNewButton('+'));     //10
+        buttons.add(buttonBuilder.createNewButton('-'));     //11
+        buttons.add(buttonBuilder.createNewButton('*'));     //12
+        buttons.add(buttonBuilder.createNewButton('/'));     //13
+        buttons.add(buttonBuilder.createNewButton(null));    //14 button 'CE'
+        buttons.add(buttonBuilder.createNewButton('.'));     //15
+        buttons.add(buttonBuilder.createNewButton('='));     //16
     }
 
     private void createInterface(){
-        setFont();
+        resultLabel.setFont(new Font("Arial", Font.BOLD, 50));
 
         JPanel panelForResult = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         panelForResult.add(resultLabel);
@@ -44,26 +49,22 @@ public class Calculator extends AbstractFrame {
         add(createPanelForAllButtons());
     }
 
-    private void setFont(){
-        Font font = new Font("Arial", Font.BOLD, 50);
-        resultLabel.setFont(font);
-
-        font = new Font("Arial", Font.BOLD, 25);
-        for (JButton button : buttons)
-            button.setFont(font);
-    }
-
     private JPanel createPanelForAllButtons(){
         JPanel panelForAllButtons = new JPanel();
         panelForAllButtons.setLayout(new BoxLayout(panelForAllButtons, BoxLayout.Y_AXIS));
+
         panelForAllButtons.add(createFirstPanelForButtons());
         panelForAllButtons.add(Box.createRigidArea(new Dimension(0, 15)));
+
         panelForAllButtons.add(createSecondPanelForButtons());
         panelForAllButtons.add(Box.createRigidArea(new Dimension(0, 15)));
+
         panelForAllButtons.add(createThirdPanelForButtons());
         panelForAllButtons.add(Box.createRigidArea(new Dimension(0, 15)));
+
         panelForAllButtons.add(createFourthPanelForButtons());
         panelForAllButtons.add(Box.createRigidArea(new Dimension(0, 15)));
+
         panelForAllButtons.add(createPanelForEqualSign());
         return panelForAllButtons;
     }
@@ -118,31 +119,6 @@ public class Calculator extends AbstractFrame {
         panelForEqualSign.setBackground(Color.GREEN);
         panelForEqualSign.add(buttons.get(16));
         return panelForEqualSign;
-    }
-
-    private void addListeners(){
-        for (int i = 0; i < 10; i++)
-            buttons.get(i).addActionListener(new DigitListener(i));
-
-        String[] mathSigns = {"+", "-", "*", "/"};
-        for (int i = 10; i < 14; i++)
-            buttons.get(i).addActionListener(new MathOperationListener(mathSigns[i - 10]));
-
-        buttons.get(14).addActionListener(new CleanEntryListener());
-        buttons.get(15).addActionListener(new PointListener());
-        buttons.get(16).addActionListener(new EqualOperationListener());
-    }
-
-    private void setMnemonic(){
-        for (int i = 0x0; i < 0x10; i++)
-            buttons.get(i).setMnemonic(0x30 + i);
-        buttons.get(10).setMnemonic(0x050);//0x0209
-        buttons.get(11).setMnemonic(0x2D);
-        buttons.get(12).setMnemonic(0x4D);
-        buttons.get(13).setMnemonic(0x2F);
-        buttons.get(14).setMnemonic(0x43);
-        buttons.get(15).setMnemonic(0x2E);
-        buttons.get(16).setMnemonic(0x3D);
     }
 
     public static void main(String[] args) {

@@ -1,5 +1,6 @@
 package calculator.listeners;
 
+import calculator.Calculator;
 import static calculator.Calculator.resultLabel;
 import java.awt.*;
 import java.awt.datatransfer.Clipboard;
@@ -20,16 +21,15 @@ public class EqualOperationListener implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (resultLabel.getText().matches("[\\d\\.\\-]+[\\+\\-\\*/][\\d\\.]+")){
-            DigitListener.counterOfPressing = 0;
-
-            defineValues();
+            doSelectionValues();
             calculate();
             writeResult();
             copyToClipboard(stringResult);
+            Calculator.operationIsComplete = true;
         }
     }
 
-    private void defineValues(){
+    private void doSelectionValues(){
         String expression = resultLabel.getText();
         firstValue = new BigDecimal(1.);
         if (expression.charAt(0) == '-') {
@@ -69,10 +69,11 @@ public class EqualOperationListener implements ActionListener {
 
     private void writeResult(){
         stringResult = result.toString();
-        if (!stringResult.equals("0")) {
+
+        stringResult = stringResult.replaceAll("\\.0+$", "");
+
+        if (stringResult.matches("\\d+\\.\\d+$"))
             stringResult = stringResult.replaceAll("0+$", "");
-            stringResult = stringResult.replaceAll("\\.$", "");
-        }
 
         resultLabel.setText(stringResult);
     }
