@@ -1,4 +1,13 @@
 package calculator.listeners;
 
-public class CleanEntryListener {
+import static calculator.Calculator.resultLabel;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+public class CleanEntryListener implements ActionListener {
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        resultLabel.setText("0");
+    }
 }
