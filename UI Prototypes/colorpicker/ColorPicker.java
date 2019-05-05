@@ -113,6 +113,11 @@ public class ColorPicker extends JWindow {
 
     private void copyToClipboard(String text) {
         StringSelection selection = new StringSelection(text);
+        try {
+            Thread.sleep(50);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         clipboard.setContents(selection, selection);
     }
 
