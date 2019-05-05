@@ -6,6 +6,8 @@ import javax.swing.event.ChangeEvent;
 import java.awt.*;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.Dictionary;
 import java.util.Hashtable;
 
@@ -19,6 +21,7 @@ public class ColorPicker extends JWindow {
     private final JSlider redColorSlider, greenColorSlider, blueColorSlider;
     private Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
     private String hexNumberOfColor;
+    private Color currentColor;
 
     public ColorPicker(){
         super();
@@ -38,6 +41,15 @@ public class ColorPicker extends JWindow {
         controlColorsPanel.add(panelForRedColor);
         controlColorsPanel.add(panelForGreenColor);
         controlColorsPanel.add(panelForBlueColor);
+
+        addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                hexNumberOfColor = Integer.toHexString(currentColor.getRGB());
+                copyToClipboard(hexNumberOfColor);
+                canvas.setToolTipText("#" + hexNumberOfColor);
+            }
+        });
 
         pack();
     }
@@ -62,7 +74,8 @@ public class ColorPicker extends JWindow {
     }
 
     private Color getDefaultColor(){
-        return new Color(defaultNumberOfRed, defaultNumberOfGreen, defaultNumberOfBlue);
+        currentColor = new Color(defaultNumberOfRed, defaultNumberOfGreen, defaultNumberOfBlue);
+        return currentColor;
     }
 
     private JPanel createControlColorsPanel(){
@@ -103,21 +116,12 @@ public class ColorPicker extends JWindow {
     }
 
     public void stateChangedColor(ChangeEvent e){
-        Color color = new Color(redColorSlider.getValue(), greenColorSlider.getValue(), blueColorSlider.getValue());
-        canvas.setBackground(color);
-
-        hexNumberOfColor = Integer.toHexString(color.getRGB());
-        copyToClipboard(hexNumberOfColor);
-        canvas.setToolTipText("#" + hexNumberOfColor);
+        currentColor = new Color(redColorSlider.getValue(), greenColorSlider.getValue(), blueColorSlider.getValue());
+        canvas.setBackground(currentColor);
     }
 
     private void copyToClipboard(String text) {
         StringSelection selection = new StringSelection(text);
-        try {
-            Thread.sleep(50);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
         clipboard.setContents(selection, selection);
     }
 
